@@ -1,226 +1,576 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Eco Sound Re:Mix Project</title>
-  <style>
-    /* 기본 설정 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-    }
-
-    body {
-      overflow-x: hidden;
-      background-color: #fafafa;
-      color: #333;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 20px 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 100;
-    }
-
-    header h1 {
-      font-size: 1.5em;
-      color: #6588e4;
-    }
-
-    nav a {
-      margin-left: 25px;
-      text-decoration: none;
-      color: #555;
-      transition: color 0.3s;
-      font-weight: 500;
-    }
-
-    nav a:hover {
-      color: #6588e4;
-    }
-
-    /* 섹션 스타일 */
-    section {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 80px 15%;
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1s ease;
-    }
-
-    section.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .hero {
-      background: linear-gradient(to bottom right, #d8eaff, #f7d6e0);
-      color: #333;
-    }
-
-    .problem {
-      background: linear-gradient(to bottom right, #eaf2e3, #fef6e4);
-    }
-
-    .idea {
-      background: linear-gradient(to bottom right, #fce1e4, #d7e3fc);
-    }
-
-    .web {
-      background: linear-gradient(to bottom right, #d4f0f0, #f9e7e7);
-    }
-
-    h2 {
-      font-size: 2.2em;
-      color: #6588e4;
-      margin-bottom: 25px;
-    }
-
-    p {
-      max-width: 850px;
-      line-height: 1.8;
-      font-size: 1.1em;
-    }
-
-    footer {
-      text-align: center;
-      background: #f3f3f3;
-      color: #777;
-      padding: 40px;
-      font-size: 0.9em;
-    }
-
-    /* 부드러운 등장 효과 */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(40px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* 인터랙티브 요소 */
-    .wave {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 150px;
-      background: url('https://raw.githubusercontent.com/nikkipeel/wave-animation/main/wave.svg');
-      background-size: cover;
-      animation: waveMove 10s infinite linear;
-      opacity: 0.5;
-    }
-
-    @keyframes waveMove {
-      from { background-position-x: 0; }
-      to { background-position-x: 1000px; }
-    }
-
-    .button {
-      margin-top: 30px;
-      padding: 12px 24px;
-      background-color: #6588e4;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 1em;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .button:hover {
-      background-color: #5576c7;
-    }
-
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>EcoSound Lab — 실용음악 × 환경</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #fffafc;
+    --card: #ffffffcc;
+    --accent1: #ffd6e0; /* pastel pink */
+    --accent2: #d6f7ff; /* pastel blue */
+    --accent3: #e9f9d6; /* pastel green */
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --glass: rgba(255,255,255,0.6);
+    --max-width: 1200px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system; background: linear-gradient(180deg,var(--bg), #fbfbff); color:var(--text); scroll-behavior:smooth;}
+  /* full-screen scroll-snap layout */
+  main{
+    height:100vh;
+    overflow-y:scroll;
+    scroll-snap-type: y mandatory;
+  }
+  section{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:48px;
+    scroll-snap-align: start;
+    gap:28px;
+  }
+  .container{width:100%;max-width:var(--max-width);margin:0 auto;display:flex;gap:32px;align-items:center;}
+  header{
+    position:fixed;
+    left:16px;right:16px;top:16px;
+    display:flex;justify-content:space-between;align-items:center;
+    z-index:50;
+    background:linear-gradient(90deg,rgba(255,255,255,0.55), rgba(255,255,255,0.2));
+    padding:8px 14px;border-radius:12px;backdrop-filter: blur(6px);
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;
+    box-shadow: 0 6px 20px rgba(20,20,40,0.07);
+  }
+  nav{display:flex;gap:12px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-weight:600;padding:8px;border-radius:8px}
+  nav a:hover{color:var(--text);background:var(--glass)}
+  .cta{background:linear-gradient(90deg,var(--accent3),var(--accent2));padding:8px 12px;border-radius:10px;font-weight:700;color:#123;}
+  /* HERO */
+  .hero{
+    align-items:center;justify-content:space-between;
+    gap:40px;
+  }
+  .hero-left{
+    flex:1;
+    background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+    padding:28px;border-radius:18px;box-shadow:0 10px 30px rgba(15,15,40,0.06);
+  }
+  h1{margin:0 0 12px 0;font-size:40px;line-height:1.05}
+  p.lead{margin:0;color:var(--muted);font-weight:500}
+  .hero-meta{display:flex;gap:12px;margin-top:18px}
+  /* audio card */
+  .audio-card{display:flex;gap:14px;align-items:center;padding:12px;border-radius:12px;background:var(--card);box-shadow:0 6px 18px rgba(12,12,30,0.04)}
+  .play-btn{width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),var(--accent1));display:flex;align-items:center;justify-content:center;font-size:20px;color:#123;border:none;cursor:pointer}
+  .meta{flex:1}
+  .meta .title{font-weight:700}
+  .meta .sub{color:var(--muted);font-size:13px}
+  /* visualizer */
+  canvas#viz{width:100%;height:150px;border-radius:10px;display:block;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));}
+  /* columns */
+  .right-col{width:420px;display:flex;flex-direction:column;gap:18px}
+  .card{background:var(--card);padding:16px;border-radius:14px;box-shadow:0 8px 24px rgba(20,20,40,0.04)}
+  /* blog */
+  .posts{display:flex;flex-direction:column;gap:12px}
+  .post{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));cursor:pointer}
+  .post h3{margin:0;font-size:16px}
+  .post p{margin:8px 0 0;color:var(--muted);font-size:14px}
+  /* sound library */
+  .library{display:flex;flex-direction:column;gap:12px}
+  .lib-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;background:rgba(250,250,250,0.7)}
+  .small{font-size:13px;color:var(--muted)}
+  /* actions */
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  button.btn{padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+  .btn.secondary{background:transparent;border:2px solid rgba(25,25,25,0.06)}
+  .btn.primary{background:linear-gradient(90deg,var(--accent2),var(--accent3));color:#123}
+  /* blog full section */
+  .blog-grid{display:grid;grid-template-columns:1fr 360px;gap:28px;width:100%}
+  /* Responsive */
+  @media (max-width:980px){
+    .container{flex-direction:column}
+    .right-col{width:100%}
+    .blog-grid{grid-template-columns:1fr}
+    h1{font-size:28px}
+  }
+  footer{padding:32px 16px;text-align:center;color:var(--muted);font-size:14px}
+  /* subtle floating shapes */
+  .float-shape{position:absolute;border-radius:20px;filter: blur(40px);opacity:0.55;pointer-events:none}
+  .shape1{width:220px;height:220px;left:-60px;top:40%;background:linear-gradient(135deg,var(--accent1),var(--accent2));z-index:0}
+  .shape2{width:160px;height:160px;right:-40px;top:10%;background:linear-gradient(135deg,var(--accent3),var(--accent2));z-index:0}
+</style>
 </head>
 <body>
+<header>
+  <div class="brand">
+    <div class="logo">ES</div>
+    <div>
+      <div style="font-weight:700">EcoSound Lab</div>
+      <div style="font-size:12px;color:var(--muted)">실용음악 × 지역 소리 생태</div>
+    </div>
+  </div>
+  <nav>
+    <a href="#problem">문제</a>
+    <a href="#idea">아이디어</a>
+    <a href="#library">사운드 라이브러리</a>
+    <a href="#blog">블로그</a>
+    <a class="cta" href="#action">참여하기</a>
+  </nav>
+</header>
 
-  <header>
-    <h1>Eco Sound Re:Mix</h1>
-    <nav>
-      <a href="#problem">문제의식</a>
-      <a href="#idea">핵심 아이디어</a>
-      <a href="#web">웹 구성</a>
-    </nav>
-  </header>
+<main>
+  <!-- HERO -->
+  <section id="home" style="position:relative;overflow:hidden;">
+    <div class="float-shape shape1"></div>
+    <div class="float-shape shape2"></div>
 
-  <section class="hero show">
-    <h2>음악으로 지구를 다시 듣다</h2>
-    <p>우리가 살아가는 세상은 수많은 소리로 이루어져 있습니다.<br>
-    그러나 기후 위기와 도시 소음 속에서 자연의 소리가 점점 사라지고 있습니다.<br>
-    실용음악 전공자의 감성으로, 그 소리를 다시 불러오는 여정을 시작합니다.</p>
-    <button class="button" onclick="scrollToSection('problem')">시작하기</button>
-    <div class="wave"></div>
+    <div class="container hero">
+      <div class="hero-left">
+        <h1>음악으로 들려주는 우리 동네의 목소리</h1>
+        <p class="lead">지역의 소리(새소리, 차량, 공사, 쓰레기 투기의 현장 등)를 수집해 시각화하고, 음악적으로 편곡해 환경 문제를 감성적으로 전달합니다.</p>
+        <div class="hero-meta">
+          <div class="audio-card" style="width:100%">
+            <button id="playBtn" class="play-btn" title="Play/Pause">▶</button>
+            <div class="meta">
+              <div class="title">데모: 공원 새소리 샘플</div>
+              <div class="sub">녹음: 시민 A · 위치: 동네공원 · 길이: 0:21</div>
+            </div>
+            <div style="width:220px">
+              <canvas id="viz"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;display:flex;gap:12px;align-items:center">
+          <button class="btn primary" onclick="document.getElementById('uploader').scrollIntoView({behavior:'smooth'})">사운드 업로드</button>
+          <button class="btn secondary" onclick="document.querySelector('#blog').scrollIntoView({behavior:'smooth'})">프로젝트 로그 보기</button>
+        </div>
+      </div>
+
+      <aside class="right-col">
+        <div class="card">
+          <strong>프로젝트 핵심</strong>
+          <p class="small" style="margin-top:8px">음악 전공자의 녹음·편곡 능력을 활용해 지역 소리를 데이터로, 예술로 바꿉니다. 수익은 지역 정화 캠페인에 사용됩니다.</p>
+        </div>
+
+        <div class="card">
+          <strong>최근 활동</strong>
+          <div class="posts" style="margin-top:8px">
+            <div class="post" onclick="openPost(this)">
+              <h3>2025-10-08: 공원 소리 수집 캠페인</h3>
+              <p>시민 12명이 참여, 32개 샘플 수집.</p>
+            </div>
+            <div class="post" onclick="openPost(this)">
+              <h3>2025-09-21: '소리로 보는 쓰레기' 공연</h3>
+              <p>현장 소리 리믹스로 만든 미니 콘서트.</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
   </section>
 
-  <section id="problem" class="problem">
-    <h2>문제의식</h2>
-    <p>기후변화와 도시화로 인해 새소리, 파도소리, 바람소리와 같은 자연의 음향 환경이 파괴되고 있습니다.<br>
-    인간은 청각적으로 자연과 멀어졌고, 그 결과 감정적 안정과 창의성이 저하되고 있습니다.<br><br>
-    이 문제의 해결은 단순한 ‘환경 보호’가 아니라, 인간의 ‘감성 회복’이라는 예술적 의미를 가집니다.</p>
+  <!-- Problem -->
+  <section id="problem" style="background:linear-gradient(180deg, rgba(255,250,250,0.8), rgba(250,255,250,0.8));">
+    <div class="container">
+      <div style="flex:1">
+        <div class="card">
+          <h2>문제의식</h2>
+          <p class="small">도시화와 인공소음 증가로 지역의 생태 소리가 사라지고 있습니다. 또한 쓰레기 무단투기와 같은 시각적·후각적 문제는 소리로도 감지될 수 있지만, 시민의 관심은 부족한 편입니다.</p>
+          <ul class="small" style="margin-top:12px">
+            <li>생태 소리 감소 → 생물다양성 신호 약화</li>
+            <li>무단투기·공사 소음 → 삶의 질 저하</li>
+            <li>시민의 낮은 환경 관찰 참여율</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="width:420px">
+        <div class="card">
+          <h3>이 문제의 의미</h3>
+          <p class="small">소리는 즉각적이고 감성적인 매체라서, 음악적 변환은 행동을 촉발하기에 매우 효과적입니다. 학생으로서 지역에서 시작하면 확장 가능성이 큽니다.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section id="idea" class="idea">
-    <h2>핵심 아이디어</h2>
-    <p><strong>Eco Sound Re:Mix 프로젝트</strong>는 자연의 소리를 수집하고 음악적으로 재해석하는 활동입니다.<br><br>
-    🎧 실용음악의 지식과 기술 — 작곡, 사운드 디자인, 믹싱을 통해<br>
-    환경 데이터를 감성적인 사운드로 변환합니다.<br>
-    예를 들어, 숲의 바람 소리를 Lo-Fi 비트로 만들거나, 빗소리를 샘플로 사용한 곡을 제작할 수 있습니다.<br><br>
-    이 프로젝트는 예술을 통해 환경 감수성을 높이고,  
-    청각적 공감으로 지속 가능한 행동 변화를 이끌어냅니다.</p>
+  <!-- Idea -->
+  <section id="idea">
+    <div class="container">
+      <div style="flex:1">
+        <div class="card">
+          <h2>핵심 아이디어</h2>
+          <p class="small">사용자가 업로드한 지역 소리를 자동 시각화(스펙트로그램/파형)하고, 간단한 리믹스(루핑·템포/피치 조정) 기능을 제공해 '사운드아트'로 전환합니다. 플랫폼 글/이벤트/기부를 통해 실제 봉사·정화 활동으로 연결합니다.</p>
+
+          <h3 style="margin-top:12px">기능 목록(우선 구현)</h3>
+          <ul class="small">
+            <li>로컬 파일 업로드 → 캔버스 비주얼라이저</li>
+            <li>간단한 리믹스: 루프, 피치, 간단한 이펙트</li>
+            <li>블로그형 로그(캠페인 기록, 投稿)</li>
+            <li>샘플 라이브러리(태그·위치·시간 포함)</li>
+            <li>모금/이벤트 연결(수익 → 정화활동)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="width:420px">
+        <div class="card">
+          <h3>음악 전공자의 기여</h3>
+          <p class="small">현장 마이크 셋업, 녹음 품질 관리, 소리 편집·믹싱, 공연 연출로 프로젝트 신뢰성과 감성 전달력을 높입니다.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section id="web" class="web">
-    <h2>웹페이지 구상</h2>
-    <p>이 웹페이지는 음악적 감성과 환경적 메시지를 동시에 전달합니다.<br><br>
-    🌿 <strong>메인화면:</strong> 감성적인 파스텔톤 배경 + 부드러운 파도 애니메이션<br>
-    🎵 <strong>섹션 구성:</strong> 문제의식 → 아이디어 → 참여 안내 순으로 스크롤 이동<br>
-    💡 <strong>인터랙션:</strong> 스크롤 시 부드러운 페이드 효과 / 음악 버튼을 누르면 자연 소리가 재생<br><br>
-    <button class="button" onclick="playNature()">자연의 소리 듣기 🌲</button>
-    <audio id="natureSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_1fdf5c64b2.mp3"></audio>
-    </p>
+  <!-- Library / Uploader -->
+  <section id="library" style="background:linear-gradient(180deg, rgba(250,255,255,0.9), rgba(245,250,255,0.95));">
+    <div class="container" id="uploader">
+      <div style="flex:1">
+        <div class="card">
+          <h2>사운드 라이브러리 · 업로드</h2>
+          <p class="small">로컬에서 녹음한 파일을 업로드하면 미리보기와 비주얼라이저가 동작합니다. (파일은 브라우저 로컬에서만 처리됩니다.)</p>
+          <div style="display:flex;gap:12px;margin-top:12px;align-items:center">
+            <input id="fileInput" type="file" accept="audio/*" />
+            <div style="flex:1">
+              <div class="small">업로드한 샘플 목록:</div>
+              <div id="libraryList" class="library" style="margin-top:8px"></div>
+            </div>
+          </div>
+          <p class="small" style="margin-top:10px;color:var(--muted)">Tip: 휴대폰 녹음(메모 앱)으로 간편하게 샘플을 만들 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div style="width:420px">
+        <div class="card">
+          <h3>간단 리믹스</h3>
+          <div style="margin-top:8px">
+            <label class="small">루프 길이(초)</label>
+            <input id="loopSec" type="range" min="1" max="10" value="4" style="width:100%" />
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+              <button class="btn primary" id="makeLoop">루프 생성</button>
+              <button class="btn secondary" id="pitchDown">- 피치</button>
+            </div>
+            <p class="small" style="margin-top:8px;color:var(--muted)">간단한 변형으로 사운드의 감성을 바꿔보세요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog">
+    <div class="container" style="align-items:flex-start">
+      <div class="blog-grid">
+        <div>
+          <div class="card">
+            <h2>블로그 · 프로젝트 로그</h2>
+            <article style="margin-top:12px">
+              <h3>공원 사운드 맵 만들기 — 2025-10-08</h3>
+              <p class="small">지역 공원 곳곳에서 새소리와 차량 소음을 비교 녹음했습니다. 결과를 음악적으로 믹스해 지역 캠페인 포스터에 사용.</p>
+            </article>
+
+            <article style="margin-top:14px">
+              <h3>리믹스 워크숍 — 2025-09-12</h3>
+              <p class="small">학생들이 녹음한 소리를 서로 리믹스하고 작은 공연을 열어 주민들의 관심을 모았습니다.</p>
+            </article>
+          </div>
+
+          <div style="margin-top:12px" class="card">
+            <h3>참여 스텝</h3>
+            <ol class="small">
+              <li>현장 녹음(휴대폰/레코더)</li>
+              <li>샘플 업로드 → 태그(위치, 이슈)</li>
+              <li>리믹스 또는 공연에 사용</li>
+              <li>캠페인으로 연결(청소·기금)</li>
+            </ol>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h3>캠페인</h3>
+            <p class="small">이번 달 목표: 동네 2곳 청소, 참여자 50명</p>
+            <div style="margin-top:12px" class="actions">
+              <button class="btn primary" onclick="document.getElementById('action').scrollIntoView({behavior:'smooth'})">참여하기</button>
+              <button class="btn secondary" onclick="alert('문의: ecosound@example.com')">문의하기</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="card">
+            <h3>연락</h3>
+            <p class="small">멘토: 실용음악과 학생 / 담당자: 시은 공</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Action -->
+  <section id="action" style="background:linear-gradient(180deg, rgba(255,255,250,0.9), rgba(250,255,250,0.95));">
+    <div class="container">
+      <div style="flex:1">
+        <div class="card">
+          <h2>참여 · 후원</h2>
+          <p class="small">작은 행동이 큰 변화를 만듭니다. 사운드 업로드와 이벤트 참여가 우선입니다. 수익은 지역 정화 활동으로 연결됩니다.</p>
+          <div style="margin-top:12px" class="actions">
+            <button class="btn primary" onclick="alert('참여 신청서(예시): https://forms.example')">참여 신청</button>
+            <button class="btn secondary" onclick="alert('기부는 현재 시범 단계입니다.')">기부하기</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="width:420px">
+        <div class="card">
+          <h3>체크리스트</h3>
+          <ul class="small">
+            <li>녹음 파일(휴대폰) 준비</li>
+            <li>파일명에 위치/날짜 기입</li>
+            <li>업로드 후 태그 추가</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
 
   <footer>
-    © 2025 Eco Sound Re:Mix | made with 🎧 passion by a Practical Music Student
+    © 2025 EcoSound Lab — 실용음악과 관점의 환경 프로젝트 · 제작: 시은 공 (예시)
   </footer>
+</main>
 
-  <script>
-    // 스크롤 등장 효과
-    const sections = document.querySelectorAll("section");
-    window.addEventListener("scroll", () => {
-      const trigger = window.innerHeight / 1.2;
-      sections.forEach(sec => {
-        const top = sec.getBoundingClientRect().top;
-        if (top < trigger) sec.classList.add("show");
-      });
-    });
+<script>
+/* --------------------------
+  Audio + Visualizer + Library
+   - Demo audio is generated procedurally (sine + birdlike impulse) to avoid external files.
+   - User can upload audio files; those are playable and visualized.
+---------------------------*/
+let audioCtx = null;
+let analyser, sourceNode, gainNode;
+let audioBuffer = null;
+let playing = false;
+const viz = document.getElementById('viz');
+const ctx = viz.getContext('2d');
+let rafId = null;
+const playBtn = document.getElementById('playBtn');
 
-    // 스크롤 이동 함수
-    function scrollToSection(id) {
-      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+// simple procedural demo sound (sine + chirps)
+async function makeDemoBuffer(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const sr = audioCtx.sampleRate;
+  const len = sr * 21;
+  const buf = audioCtx.createBuffer(1,len,sr);
+  const ch = buf.getChannelData(0);
+  for(let i=0;i<len;i++){
+    const t = i/sr;
+    // soft drone
+    ch[i] += 0.02*Math.sin(2*Math.PI*220*t);
+    // bird chirps (impulse-like)
+    if(Math.random() < 0.0015) {
+      for(let k=0;k<500 && i+k<len;k++){
+        ch[i+k] += 0.2 * Math.exp(-k/200) * Math.sin(2*Math.PI*(1200 + Math.random()*1200) * (k/sr));
+      }
     }
+  }
+  return buf;
+}
 
-    // 자연의 소리 재생 함수
-    function playNature() {
-      const audio = document.getElementById("natureSound");
-      audio.volume = 0.5;
-      audio.play();
-    }
-  </script>
+async function initAudioWithBuffer(buf){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(sourceNode) try{sourceNode.stop()}catch(e){}
+  sourceNode = audioCtx.createBufferSource();
+  sourceNode.buffer = buf;
+  gainNode = audioCtx.createGain();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 2048;
+  sourceNode.connect(gainNode);
+  gainNode.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  sourceNode.loop = true;
+}
 
+// draw visualizer
+function drawViz(){
+  const w = viz.width = viz.clientWidth * devicePixelRatio;
+  const h = viz.height = viz.clientHeight * devicePixelRatio;
+  ctx.clearRect(0,0,w,h);
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(data);
+  const barW = (w / data.length);
+  for(let i=0;i<data.length;i++){
+    const val = data[i];
+    const x = i * barW;
+    const barH = (val / 255) * h;
+    // color gradient based on frequency index
+    const hue = Math.round(200 - (i/data.length)*120);
+    ctx.fillStyle = `hsl(${hue} 70% 70%)`;
+    ctx.fillRect(x, h - barH, barW*0.9, barH);
+  }
+  rafId = requestAnimationFrame(drawViz);
+}
+
+// play/pause
+playBtn.onclick = async ()=>{
+  if(!audioBuffer){
+    audioBuffer = await makeDemoBuffer();
+    await initAudioWithBuffer(audioBuffer);
+  }
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(!playing){
+    sourceNode.start(0);
+    playing = true;
+    playBtn.textContent = '❚❚';
+    drawViz();
+  } else {
+    try{ sourceNode.stop(); } catch(e){}
+    // recreate source for next start
+    await initAudioWithBuffer(audioBuffer);
+    playing = false;
+    playBtn.textContent = '▶';
+    if(rafId) cancelAnimationFrame(rafId);
+    ctx.clearRect(0,0,viz.width,viz.height);
+  }
+};
+
+/* --------------------------
+  File upload handling (local only)
+---------------------------*/
+const fileInput = document.getElementById('fileInput');
+const libraryList = document.getElementById('libraryList');
+const makeLoopBtn = document.getElementById('makeLoop');
+const pitchDownBtn = document.getElementById('pitchDown');
+
+let uploadedBuffers = []; // {name, buffer, id}
+
+fileInput.addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const arr = await file.arrayBuffer();
+  const buf = await audioCtx.decodeAudioData(arr);
+  const id = 's'+Date.now();
+  uploadedBuffers.push({id, name:file.name, buffer:buf});
+  renderLibrary();
+});
+
+function renderLibrary(){
+  libraryList.innerHTML = '';
+  for(const item of uploadedBuffers){
+    const div = document.createElement('div');
+    div.className='lib-item';
+    div.innerHTML = `<div style="flex:1"><strong>${escapeHtml(item.name)}</strong><div class="small">길이 ${Math.round(item.buffer.duration)}s</div></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="playUploaded('${item.id}')" class="btn secondary">재생</button>
+        <button onclick="makeLoopFrom('${item.id}')" class="btn secondary">루프</button>
+      </div>`;
+    libraryList.appendChild(div);
+  }
+}
+
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.playUploaded = async function(id){
+  const item = uploadedBuffers.find(i=>i.id===id);
+  if(!item) return;
+  if(sourceNode) try{ sourceNode.stop(); }catch(e){}
+  await initAudioWithBuffer(item.buffer);
+  sourceNode.loop = false;
+  sourceNode.start(0);
+  playing = true;
+  playBtn.textContent='❚❚';
+  drawViz();
+}
+
+/* make loop from uploaded: slice 0..loopSec */
+window.makeLoopFrom = async function(id){
+  const item = uploadedBuffers.find(i=>i.id===id);
+  if(!item) return;
+  const sec = Number(document.getElementById('loopSec').value) || 4;
+  // create small buffer copy
+  const sr = item.buffer.sampleRate;
+  const len = Math.min(item.buffer.length, sec*sr);
+  const newBuf = audioCtx.createBuffer(item.buffer.numberOfChannels, len, sr);
+  for(let ch=0;ch<item.buffer.numberOfChannels;ch++){
+    const src = item.buffer.getChannelData(ch);
+    const dst = newBuf.getChannelData(ch);
+    for(let i=0;i<len;i++) dst[i] = src[i];
+  }
+  if(sourceNode) try{ sourceNode.stop(); }catch(e){}
+  await initAudioWithBuffer(newBuf);
+  sourceNode.loop = true;
+  sourceNode.start(0);
+  playing = true;
+  playBtn.textContent='❚❚';
+  drawViz();
+}
+
+makeLoopBtn.onclick = ()=>{ // try loop the demo or first uploaded
+  if(uploadedBuffers.length) {
+    makeLoopFrom(uploadedBuffers[0].id);
+  } else {
+    (async ()=>{
+      if(!audioBuffer) audioBuffer = await makeDemoBuffer();
+      const sec = Number(document.getElementById('loopSec').value) || 4;
+      // slice demo buffer
+      const sr = audioBuffer.sampleRate;
+      const newLen = Math.min(audioBuffer.length, sec*sr);
+      const newB = audioCtx.createBuffer(1,newLen,sr);
+      newB.getChannelData(0).set(audioBuffer.getChannelData(0).slice(0,newLen));
+      if(sourceNode) try{ sourceNode.stop(); }catch(e){}
+      await initAudioWithBuffer(newB);
+      sourceNode.loop=true;
+      sourceNode.start(0);
+      playing=true; playBtn.textContent='❚❚'; drawViz();
+    })();
+  }
+};
+
+pitchDownBtn.onclick = ()=>{
+  // simple pitch effect: stop current source and play with detune (not supported on bufferSource in all browsers)
+  // fallback: change playbackRate
+  if(!sourceNode || !audioCtx) return;
+  try{
+    sourceNode.playbackRate.value = (sourceNode.playbackRate.value || 1)*0.9;
+  }catch(e){}
+};
+
+/* small helper for opening posts */
+function openPost(el){
+  const more = el.querySelector('p.small');
+  if(!more) return;
+  if(more.style.display === 'block'){ more.style.display='none'; } else { more.style.display='block'; }
+}
+
+/* set canvas DPI */
+function resizeCanvas(){
+  viz.width = viz.clientWidth * devicePixelRatio;
+  viz.height = viz.clientHeight * devicePixelRatio;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+/* Accessibility: keyboard play/pause via space key when focused anywhere */
+window.addEventListener('keydown', (e)=>{
+  if(e.code === 'Space'){
+    e.preventDefault();
+    playBtn.click();
+  }
+});
+
+/* Smooth scroll for header links */
+document.querySelectorAll('header nav a').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
 </body>
 </html>
